@@ -333,6 +333,42 @@ Array [
           </div>
         </label>
       </div>
+      <div
+        className="gf-form-switch-container-react"
+      >
+        <label
+          className="gf-form gf-form-switch-container "
+          htmlFor="2"
+        >
+          <div
+            className="gf-form-label query-keyword  pointer"
+          >
+            Match Exact
+            <div
+              className="gf-form-help-icon gf-form-help-icon--right-normal"
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+            >
+              <i
+                className="fa fa-info-circle"
+              />
+            </div>
+          </div>
+          <div
+            className="gf-form-switch  "
+          >
+            <input
+              checked={true}
+              id="2"
+              onChange={[Function]}
+              type="checkbox"
+            />
+            <span
+              className="gf-form-switch__slider"
+            />
+          </div>
+        </label>
+      </div>
     </div>
     <div
       className="gf-form gf-form--grow"
