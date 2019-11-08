@@ -120,6 +120,10 @@ export default class CloudWatchDatasource extends DataSourceApi<CloudWatchQuery>
     return this.performTimeSeriesQuery(request, options.range);
   }
 
+  get variables() {
+    return this.templateSrv.variables.map(v => `$${v.name}`);
+  }
+
   getPeriod(target: any, options: any, now?: number) {
     const start = this.convertToCloudWatchTime(options.range.from, false);
     const end = this.convertToCloudWatchTime(options.range.to, true);
@@ -284,6 +288,7 @@ export default class CloudWatchDatasource extends DataSourceApi<CloudWatchQuery>
       return {
         text: v[0],
         value: v[1],
+        label: v[1],
       };
     });
   }
@@ -319,27 +324,39 @@ export default class CloudWatchDatasource extends DataSourceApi<CloudWatchQuery>
     return this.doMetricQueryRequest('namespaces', null);
   }
 
-  getMetrics(namespace: string, region: string) {
+  async getMetrics(namespace: string, region: string) {
+    if (!namespace || !region) {
+      return [];
+    }
+
     return this.doMetricQueryRequest('metrics', {
       region: this.templateSrv.replace(this.getActualRegion(region)),
       namespace: this.templateSrv.replace(namespace),
     });
   }
 
-  getDimensionKeys(namespace: string, region: string) {
+  async getDimensionKeys(namespace: string, region: string) {
+    if (!namespace) {
+      return [];
+    }
+
     return this.doMetricQueryRequest('dimension_keys', {
       region: this.templateSrv.replace(this.getActualRegion(region)),
       namespace: this.templateSrv.replace(namespace),
     });
   }
 
-  getDimensionValues(
+  async getDimensionValues(
     region: string,
     namespace: string,
     metricName: string,
     dimensionKey: string,
     filterDimensions: {}
   ) {
+    if (!namespace || !metricName) {
+      return [];
+    }
+
     return this.doMetricQueryRequest('dimension_values', {
       region: this.templateSrv.replace(this.getActualRegion(region)),
       namespace: this.templateSrv.replace(namespace),
