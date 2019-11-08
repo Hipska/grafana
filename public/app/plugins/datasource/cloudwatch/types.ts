@@ -1,4 +1,4 @@
-import { DataQuery, SelectableValue } from '@grafana/data';
+import { DataQuery, SelectableValue, DataSourceJsonData } from '@grafana/data';
 
 export interface CloudWatchQuery extends DataQuery {
   id: string;
@@ -14,3 +14,15 @@ export interface CloudWatchQuery extends DataQuery {
 }
 
 export type SelectableStrings = Array<SelectableValue<string>>;
+
+export interface CloudWatchJsonData extends DataSourceJsonData {
+  timeField?: string;
+  assumeRoleArn?: string;
+  database?: string;
+  customMetricsNamespaces?: string;
+}
+
+export interface CloudWatchSecureJsonData {
+  accessKey: string;
+  secretKey: string;
+}

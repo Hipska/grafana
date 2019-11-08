@@ -20,7 +20,7 @@ import { TemplateSrv } from 'app/features/templating/template_srv';
 import { TimeSrv } from 'app/features/dashboard/services/TimeSrv';
 import { ThrottlingErrorMessage } from './components/ThrottlingErrorMessage';
 import memoizedDebounce from './memoizedDebounce';
-import { CloudWatchQuery } from './types';
+import { CloudWatchQuery, CloudWatchJsonData } from './types';
 
 const displayAlert = (datasourceName: string, region: string) =>
   store.dispatch(
@@ -33,16 +33,17 @@ const displayAlert = (datasourceName: string, region: string) =>
     )
   );
 
-export default class CloudWatchDatasource extends DataSourceApi<CloudWatchQuery> {
+export default class CloudWatchDatasource extends DataSourceApi<CloudWatchQuery, CloudWatchJsonData> {
   type: any;
   proxyUrl: any;
   defaultRegion: any;
   standardStatistics: any;
+  datasourceName: string;
   debouncedAlert: (datasourceName: string, region: string) => void;
 
   /** @ngInject */
   constructor(
-    private instanceSettings: DataSourceInstanceSettings,
+    instanceSettings: DataSourceInstanceSettings<CloudWatchJsonData>,
     private $q: IQService,
     private backendSrv: BackendSrv,
     private templateSrv: TemplateSrv,
@@ -52,7 +53,7 @@ export default class CloudWatchDatasource extends DataSourceApi<CloudWatchQuery>
     this.type = 'cloudwatch';
     this.proxyUrl = instanceSettings.url;
     this.defaultRegion = instanceSettings.jsonData.defaultRegion;
-    this.instanceSettings = instanceSettings;
+    this.datasourceName = instanceSettings.name;
     this.standardStatistics = ['Average', 'Maximum', 'Minimum', 'Sum', 'SampleCount'];
     this.debouncedAlert = memoizedDebounce(displayAlert, AppNotificationTimeout.Error);
   }
@@ -97,7 +98,7 @@ export default class CloudWatchDatasource extends DataSourceApi<CloudWatchQuery>
           refId: item.refId,
           intervalMs: options.intervalMs,
           maxDataPoints: options.maxDataPoints,
-          datasourceId: this.instanceSettings.id,
+          datasourceId: this.id,
           type: 'timeSeriesQuery',
         },
         item
@@ -277,7 +278,7 @@ export default class CloudWatchDatasource extends DataSourceApi<CloudWatchQuery>
             []
           ) as string[];
 
-          regionsAffected.forEach(region => this.debouncedAlert(this.instanceSettings.name, region));
+          regionsAffected.forEach(region => this.debouncedAlert(this.datasourceName, region));
         }
         throw err;
       });
@@ -304,7 +305,7 @@ export default class CloudWatchDatasource extends DataSourceApi<CloudWatchQuery>
             refId: 'metricFindQuery',
             intervalMs: 1, // dummy
             maxDataPoints: 1, // dummy
-            datasourceId: this.instanceSettings.id,
+            datasourceId: this.id,
             type: 'metricFindQuery',
             subtype: subtype,
           },
@@ -490,7 +491,7 @@ export default class CloudWatchDatasource extends DataSourceApi<CloudWatchQuery>
             refId: 'annotationQuery',
             intervalMs: 1, // dummy
             maxDataPoints: 1, // dummy
-            datasourceId: this.instanceSettings.id,
+            datasourceId: this.id,
             type: 'annotationQuery',
           },
           parameters
@@ -521,7 +522,7 @@ export default class CloudWatchDatasource extends DataSourceApi<CloudWatchQuery>
   }
 
   testDatasource() {
-    /* use billing metrics for test */
+    // use billing metrics for test
     const region = this.defaultRegion;
     const namespace = 'AWS/Billing';
     const metricName = 'EstimatedCharges';

@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { DataSourceInstanceSettings } from '@grafana/data';
 import { TemplateSrv } from 'app/features/templating/template_srv';
 import { CustomVariable } from 'app/features/templating/all';
-import { CloudWatchQueryEditor, Props } from './QueryEditor';
+import { QueryEditor, Props } from './QueryEditor';
 import CloudWatchDatasource from '../datasource';
 
 const setup = () => {
@@ -59,7 +59,7 @@ const setup = () => {
 describe('QueryEditor', () => {
   it('should render component', () => {
     const props = setup();
-    const tree = renderer.create(<CloudWatchQueryEditor {...props} />).toJSON();
+    const tree = renderer.create(<QueryEditor {...props} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 
@@ -67,7 +67,7 @@ describe('QueryEditor', () => {
     it('when region is null is display default in the label', () => {
       const props = setup();
       props.query.region = null;
-      const wrapper = mount(<CloudWatchQueryEditor {...props} />);
+      const wrapper = mount(<QueryEditor {...props} />);
       expect(
         wrapper
           .find('.gf-form-inline')
@@ -86,7 +86,7 @@ describe('QueryEditor', () => {
       props.query.dimensions = null;
       props.query.region = null;
       props.query.statistics = null;
-      const wrapper = mount(<CloudWatchQueryEditor {...props} />);
+      const wrapper = mount(<QueryEditor {...props} />);
       const {
         query: { namespace, region, metricName, dimensions, statistics, expression },
       } = wrapper.props();

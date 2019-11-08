@@ -24,7 +24,7 @@ const idValidationEvents: ValidationEvents = {
   ],
 };
 
-export class CloudWatchQueryEditor extends PureComponent<Props, State> {
+export class QueryEditor extends PureComponent<Props, State> {
   state: State = { regions: [], namespaces: [], metricNames: [], variableOptionGroup: {} };
 
   componentWillMount() {
