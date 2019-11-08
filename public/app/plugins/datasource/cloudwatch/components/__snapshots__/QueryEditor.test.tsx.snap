@@ -378,5 +378,12 @@ Array [
       />
     </div>
   </div>,
+  <div
+    className="grafana-info-box"
+  >
+    <div
+      className="gf-form-inline"
+    />
+  </div>,
 ]
 `;

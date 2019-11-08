@@ -47,6 +47,7 @@ const setup = () => {
       expression: '',
       alias: '',
       highResolution: false,
+      matchExact: true,
     },
     datasource,
     onChange: jest.fn(),
@@ -88,7 +89,7 @@ describe('QueryEditor', () => {
       props.query.statistics = null;
       const wrapper = mount(<QueryEditor {...props} />);
       const {
-        query: { namespace, region, metricName, dimensions, statistics, expression },
+        query: { namespace, region, metricName, dimensions, statistics, expression, matchExact },
       } = wrapper.props();
       expect(namespace).toEqual('');
       expect(metricName).toEqual('');
