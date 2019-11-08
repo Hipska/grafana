@@ -89,7 +89,7 @@ describe('QueryEditor', () => {
       props.query.statistics = null;
       const wrapper = mount(<QueryEditor {...props} />);
       const {
-        query: { namespace, region, metricName, dimensions, statistics, expression, matchExact },
+        query: { namespace, region, metricName, dimensions, statistics, expression },
       } = wrapper.props();
       expect(namespace).toEqual('');
       expect(metricName).toEqual('');
